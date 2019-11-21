@@ -1,1 +1,1 @@
-@http://imweb.nohost.pro:8080/whistle.nohost/cgi-bin/plugin-rules
+@{{whistlePluginPackage.pluginHomepage}}/whistle.nohost/cgi-bin/plugin-rules

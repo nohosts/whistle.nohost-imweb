@@ -1,5 +1,6 @@
 # whistle.nohost-imweb
-访问 nohost 的 whistle 插件，安装此插件前确保你本地运行的 [whistle](https://github.com/avwo/whistle) 为最新版本。
+访问 nohost 的 whistle 插件，安装此插件前确保你本地运行的 [whistle](https://github.com/avwo/whistle) 为最新版本（`>= v2.3.1`）。
+> 需要用到 `v2.3.1` 及以上版本的 whistle，主要是因为项目的 `rules.txt` 里面用到了占位符 `{{whistlePluginPackage.pluginHomepage}}`。
 
 # 安装或更新 whistle
 ``` sh
