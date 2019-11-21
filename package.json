@@ -1,0 +1,6 @@
+{
+  "name": "whistle.nohost-imweb",
+  "version": "1.0.0",
+  "description": "连接 nohost 的 whistle 插件",
+  "license": "MIT"
+}
