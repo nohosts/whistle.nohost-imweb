@@ -6,7 +6,8 @@ git clone https://github.com/nohosts/whistle.nohost-imweb.git whistle.nohost-imw
 
 1. [package.json](./package.json)：
     * 把里面的 `nohost-imweb` 改成 `nohost-imwebtest`
-    * 将 `pluginHomepage`改成自己的 nohost 域名及端口如： `http://imwebtest.oa.com:8080`
+    * 将 `pluginHomepage` 及 `whistleConfig/menuConfig/baseUrl` 改成自己的 nohost 域名及端口如： `http://imwebtest.oa.com:8080`
+        > 即替换所有 `http://imwebtest.oa.com:8080`
 2. [README.md](./README.md)：
     * 把里面的所有 `nohost-imweb` 替换成 `nohost-imwebtest`
     * 把里面的重要提醒删除

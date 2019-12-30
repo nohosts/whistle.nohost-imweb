@@ -4,7 +4,23 @@
   "description": "连接 nohost 的 whistle 插件",
   "pluginHomepage": "http://imweb.nohost.pro:8080",
   "whistleConfig": {
-    "priority": 100
+    "priority": 1,
+    "hideLongProtocol": true,
+    "hideShortProtocol": true,
+    "menuConfig": {
+      "baseUrl": "http://imweb.nohost.pro:8080"
+    },
+    "networkMenus": [
+      {
+        "name": "分享到Nohost",
+        "page": "/menu.html",
+        "required": true
+      },
+      {
+        "name": "查看分享记录",
+        "page": "/menu.html"
+      }
+    ]
   },
   "license": "MIT"
 }

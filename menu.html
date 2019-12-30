@@ -1,0 +1,87 @@
+<script>
+  var w2 = window.whistleBridge;
+  var showModal = w2.showModal;
+  var ENV_NAME_RE = /[^,\s]+%2F[^,\s]*/i;
+  var baseUrl = w2.config.baseUrl;
+
+  function getExportList() {
+    var list = localStorage.exportInfoList;
+    try {
+      list = JSON.parse(list);
+      if (Array.isArray(list)) {
+        return list.filter(function (item) {
+          return item && item.name && item.date;
+        });
+      }
+    } catch (e) {}
+    return [];
+  }
+
+  function saveExportList(name, date)  {
+    var list = getExportList();
+    list.push({ name, date });
+    if (list.length > 100) {
+      list = list.slice(-30);
+    }
+    localStorage.exportInfoList = JSON.stringify(list);
+    return list;
+  }
+  // 如果有构建，可以用模板代替
+  function createTable(list) {
+    var highlight = list;
+    list = list || getExportList();
+    list = list.reverse().map(function(item, i) {
+      var url = baseUrl + '/network.html?name=' + encodeURIComponent(item.name) + '&date=' + encodeURIComponent(item.date)
+      return '<tr' + (!i && highlight ? ' style="font-weight: bold;"' : '') + '><th>' + (i + 1)
+        + '</th><td style="overflow: hidden"><a href="' + url + '" target="_blank">'
+          + url + '</a></td><td><a href="javascript:;" class="w-copy-text-with-tips" data-clipboard-text="'
+            + url + '">复制</a></td>';
+    }).join('');
+    var head = '<thead><th style="width: 60px">#</th><th>URL</th><th style="width: 120px">Operation</th></thead>';
+    return '<table class="table">' + head + '<tbody><tr>' + list + '</tbody></table>';
+  }
+
+  function showFeeds(list) {
+    w2.showModal({
+      width: 900,
+      title: '抓包分享记录',
+      body: createTable(list)
+    });
+  }
+  function exportSessions(options) {
+    var selectedList = options.selectedList;
+    if (!selectedList.length) {
+      selectedList = [ options.activeItem ];
+    }
+    selectedList.forEach(function(item) {
+      var headers = item && item.res && item.res.headers;
+      if (headers && ENV_NAME_RE.test(headers['x-whistle-response-for'])) {
+        headers = item.req.headers;
+        headers['x-whistle-nohost-env'] = RegExp['$&'];
+        headers['x-whistle-rule-value'] = encodeURIComponent(headers.host + ' internal-proxy://nohost.oa.com:8080');
+      }
+    });
+    var name = Date.now() + '' + Math.floor(Math.random() * 1000);
+    w2.request({
+      url: baseUrl + '/cgi-bin/sessions/export',
+      crossDomain: true,
+      type: 'post',
+      data: {
+        name: name,
+        sessions: JSON.stringify(selectedList)
+      }
+    }, function(data) {
+      if (!data) {
+        return w2.toast.error('分享失败，请稍后再试！');
+      }
+      showFeeds(saveExportList(name, data.date));
+    });
+  }
+  w2.addNetworkListener(function(options) {
+    if (options.name === '分享到Nohost') {
+      exportSessions(options);
+    } else {
+      showFeeds();
+    }
+  });
+</script>
